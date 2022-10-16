@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import com.carona.caronasfesa.entities.User;
 import com.carona.caronasfesa.repositories.UserRepository;
@@ -24,46 +26,44 @@ import com.carona.caronasfesa.repositories.UserRepository;
 @RestController
 public class UserController {
     @Autowired
-    UserRepository user;
+    UserRepository userRepository;
     
     @GetMapping("/user")
-    public List<User> getAllUsers(@RequestParam(name="nameContains", defaultValue="") String name) {
-        return user.findAll();
+    public ResponseEntity<List<User>> getAllUsers(@RequestParam(name="nameContains", defaultValue="") String name) {
+        return new ResponseEntity<>(userRepository.findAll(), HttpStatus.OK);
     }
     
     @GetMapping("/user/{userId}")
-    public User getAllUsers(@PathVariable("userId") Integer userId, HttpServletResponse response) {
-        Optional<User> foundUser = user.findById(userId);
-        if (!foundUser.isPresent()) {
-            response.setStatus(404);
-            return null;
-        }
-        return foundUser.get();
+    public ResponseEntity<User> getAllUsers(@PathVariable("userId") Integer userId, HttpServletResponse response) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new ResourceNotFoundException("Not found Tutorial with id = " + userId));
+
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
     
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/user/{userId}")
-    public void deleteUser(@PathVariable("userId") Integer userId) {
-        Optional<User> userToDelete = user.findById(userId);
+    public ResponseEntity<HttpStatus> deleteUser(@PathVariable("userId") Integer userId) {
+        Optional<User> userToDelete = userRepository.findById(userId);
         if (userToDelete.isPresent()) {
-            user.delete(userToDelete.get());
+            userRepository.delete(userToDelete.get());
         }
+        
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     
     @PostMapping(path="/user")
-    public User newEmployee(@RequestBody User newUser) {
-        return user.saveAndFlush(newUser);
+    public ResponseEntity<User> newUser(@RequestBody User newUser) {
+        return new ResponseEntity<>(userRepository.saveAndFlush(newUser), HttpStatus.CREATED);
     }
     
     @PutMapping("/user/{userId}")
-    public User replaceUser(@RequestBody User newUser, @PathVariable("userId") Integer userId, HttpServletResponse response) {
-        Optional<User> userToDelete = user.findById(userId);
-        if (!userToDelete.isPresent()) {
-            response.setStatus(204);
-            return null;
-        } else {
-            newUser.setId(userId);
-            return user.save(newUser);
-        }
+    public ResponseEntity<User> replaceUser(@RequestBody User newUser, @PathVariable("userId") Integer userId) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new ResourceNotFoundException("Not found Tutorial with id = " + userId));
+
+        user.setName(newUser.getName());
+        
+        return new ResponseEntity<>(userRepository.save(user), HttpStatus.OK);
     }
 }
