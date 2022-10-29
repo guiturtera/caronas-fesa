@@ -9,6 +9,16 @@ public class Post extends AbstractModel {
     public Post() {
     }
 
+    public Post(String title, String description, Location placeOfDeparture, Location destination,
+            Integer availableSeats, LocalDateTime departureTime) {
+        this.title = title;
+        this.description = description;
+        this.placeOfDeparture = placeOfDeparture;
+        this.destination = destination;
+        this.availableSeats = availableSeats;
+        this.departureTime = departureTime;
+    }
+
     private String title;
     private String description;
     private Location placeOfDeparture;
