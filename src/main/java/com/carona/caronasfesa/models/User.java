@@ -5,12 +5,14 @@ public class User extends AbstractModel {
     public User() {
     }
 
-    public User(Integer id, String description, String studentId, String name, Course course, String phoneNumber) {
+    public User(Integer id, String name, String description, String studentId, Course course, String phoneNumber,
+            String password) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.course = course;
         this.phoneNumber = phoneNumber;
+        this.password = password;
     }
 
     private String name;
