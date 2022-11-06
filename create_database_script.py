@@ -14,6 +14,7 @@ try:
             [id] INTEGER PRIMARY KEY,
             [name] TEXT,
             [description] TEXT,
+            [student_id] TEXT,
             [course] INTEGER,
             [phone_number] TEXT,
             [password] TEXT
