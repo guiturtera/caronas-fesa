@@ -18,6 +18,7 @@ public class User extends AbstractModel {
     private String studentId;
     private Course course;
     private String phoneNumber;
+    private String password;
 
     public String getName() {
         return name;
@@ -58,11 +59,12 @@ public class User extends AbstractModel {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
-}
 
-enum Course {
-    ComputerEngineering,
-    FoodEngineering,
-    BusinessAdministration,
-    ControlAndAutomationEngineering
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }
