@@ -59,3 +59,10 @@ public class User extends AbstractModel {
         this.phoneNumber = phoneNumber;
     }
 }
+
+enum Course {
+    ComputerEngineering,
+    FoodEngineering,
+    BusinessAdministration,
+    ControlAndAutomationEngineering
+}
